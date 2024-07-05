@@ -1,0 +1,24 @@
+#!bin/bash
+
+
+
+#update tools used
+
+sudo apt -y update
+
+sudo apt -y upgrade nmap
+
+sudo nmap --script-updatedb
+
+# grab first three octets of network we are in
+
+First_Three=$(ifconfig | grep netmask | awk '/broadcast/ {print $2}' | cut -d "." -f 1,2,3 | uniq)
+
+# grab netmask of network
+
+Net=$(ip addr show | grep inet | grep brd | tr '/' ' ' | awk '{print $3}')
+
+
+#use these to run network scan with nmap
+
+sudo nmap $First_Three.0/$Net > scan.txt
